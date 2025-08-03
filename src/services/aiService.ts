@@ -3,6 +3,7 @@ const failedKeys = new Set<string>();
 
 const API_BASE_URL_LOCAL = 'http://localhost:3001/api';
 const API_BASE_URL_PROD = 'https://mp-server.replit.app/api';
+
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? API_BASE_URL_PROD : API_BASE_URL_LOCAL;
 
 
