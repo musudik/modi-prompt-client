@@ -44,30 +44,23 @@ const PromptGenerator: React.FC<PromptGeneratorProps> = () => {
 
   // Add these state variables for models
   const [availableModels, setAvailableModels] = useState<Array<{name: string, icon: string}>>([]);
-  const [modelsLoading, setModelsLoading] = useState<boolean>(true);
+  // Remove unused modelsLoading state
 
   // Load available models on component mount
   useEffect(() => {
     const loadModels = async () => {
       try {
-        setModelsLoading(true);
         const models = await getAvailableModels();
         setAvailableModels(models);
       } catch (error) {
         console.error('Failed to load models:', error);
         setAvailableModels([]);
-      } finally {
-        setModelsLoading(false);
       }
     };
 
     loadModels();
   }, []);
 
-  // Remove this line that's causing issues:
-  // const availableModels = getAvailableModels(); // This returns a Promise, not an array!
-
-  // Move these functions inside the component
   const handleCopyPrompt = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(generatedPrompt);
@@ -89,7 +82,7 @@ const PromptGenerator: React.FC<PromptGeneratorProps> = () => {
     }
   };
 
-  const renderJsonWithSyntaxHighlighting = (jsonString: string): JSX.Element[] => {
+  const renderJsonWithSyntaxHighlighting = (jsonString: string): React.ReactElement[] => {
     const formattedJson = formatJsonOutput(jsonString);
     
     return formattedJson.split('\n').map((line, index) => {
@@ -130,8 +123,11 @@ const PromptGenerator: React.FC<PromptGeneratorProps> = () => {
     });
   };
 
-  const handleInputChange = (field: keyof FormData, value: string): void => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: keyof FormData, value: string | number): void => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
